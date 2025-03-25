@@ -1,0 +1,397 @@
+
+openapi: 3.0.3
+info:
+  title: DevGrade Public API
+  description: |
+    DevGrade provides a public API that enables external platforms and administrators to manage candidate assessments, 
+    sessions, and templates programmatically. This API supports typical use cases such as scheduling assessments, 
+    assigning templates, and retrieving evaluation data.
+  version: "1.0.0"
+  contact:
+    name: DevGrade Support
+    email: support@devgrade.io
+
+servers:
+  - url: https://api.devgrade.io
+    description: Development server for DevGrade
+
+tags:
+  - name: Auth
+    description: Authentication related endpoints
+  - name: Candidates
+    description: Candidate management endpoints
+  - name: Templates
+    description: Template creation and retrieval
+  - name: Assessments
+    description: Assessment group and session management
+
+paths:
+  /auth/:
+    post:
+      tags: [Auth]
+      summary: Generate Access Token
+      description: |
+        Authenticates a user and returns a JWT access token for protected endpoints.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: JWT access token returned
+
+  /candidates/:
+    post:
+      tags: [Candidates]
+      summary: Create Candidate
+      description: Register a new candidate.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                name:
+                  type: string
+              required:
+                - email
+                - name
+      responses:
+        '201':
+          description: Candidate created
+
+    get:
+      tags: [Candidates]
+      summary: Retrieve All Candidates
+      description: List all registered candidates.
+      responses:
+        '200':
+          description: List of candidates
+
+  /candidates/{candidateId}:
+    get:
+      tags: [Candidates]
+      summary: Get Candidate by ID
+      parameters:
+        - name: candidateId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Candidate details
+
+    put:
+      tags: [Candidates]
+      summary: Update Candidate
+      parameters:
+        - name: candidateId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Candidate updated
+
+    delete:
+      tags: [Candidates]
+      summary: Delete Candidate
+      parameters:
+        - name: candidateId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Candidate deleted
+
+  /template/:
+    post:
+      tags: [Templates]
+      summary: Create Template
+      description: Create a new coding template.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                creatorEmail:
+                  type: string
+                creatorName:
+                  type: string
+                templateName:
+                  type: string
+                techStack:
+                  type: string
+                duration:
+                  type: string
+                orgId:
+                  type: string
+              required:
+                - creatorEmail
+                - creatorName
+                - templateName
+                - techStack
+                - duration
+                - orgId
+      responses:
+        '201':
+          description: Template created
+
+  /templates:
+    get:
+      tags: [Templates]
+      summary: Get All Templates
+      description: Retrieve all templates.
+      responses:
+        '200':
+          description: List of templates
+
+  /templates/{templateId}:
+    get:
+      tags: [Templates]
+      summary: Get Template by ID
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Template details
+
+    put:
+      tags: [Templates]
+      summary: Update Template
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                templateName:
+                  type: string
+                techStack:
+                  type: string
+                duration:
+                  type: string
+      responses:
+        '200':
+          description: Template updated
+
+    delete:
+      tags: [Templates]
+      summary: Delete Template
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Template deleted
+
+  /assessments/:
+    post:
+      tags: [Assessments]
+      summary: Create Assessment Group
+      description: Create a new group linked to a template.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                templateId:
+                  type: string
+                name:
+                  type: string
+              required:
+                - templateId
+                - name
+      responses:
+        '201':
+          description: Assessment group created
+
+    get:
+      tags: [Assessments]
+      summary: List Assessment Groups
+      parameters:
+        - name: orgId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of groups
+
+  /assessments/{assessmentId}:
+    get:
+      tags: [Assessments]
+      summary: Get Assessment Group by ID
+      parameters:
+        - name: assessmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Group details
+
+    put:
+      tags: [Assessments]
+      summary: Update Assessment Group
+      parameters:
+        - name: assessmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                templateId:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Group updated
+
+    delete:
+      tags: [Assessments]
+      summary: Delete Assessment Group
+      parameters:
+        - name: assessmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Group deleted
+
+  /assessments/{assessmentId}/sessions:
+    post:
+      tags: [Assessments]
+      summary: Create Session
+      description: Schedule a session for an assessment group.
+      parameters:
+        - name: assessmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dateTime:
+                  type: string
+                  format: date-time
+                userId:
+                  type: string
+              required:
+                - dateTime
+                - userId
+      responses:
+        '201':
+          description: Session created
+
+    get:
+      tags: [Assessments]
+      summary: Get All Sessions for Group
+      parameters:
+        - name: assessmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of sessions
+
+  /assessments/{assessmentId}/sessions/{sessionId}:
+    get:
+      tags: [Assessments]
+      summary: Get Session by ID
+      parameters:
+        - name: assessmentId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Session details
+
+    delete:
+      tags: [Assessments]
+      summary: Delete Session
+      parameters:
+        - name: assessmentId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Session deleted
