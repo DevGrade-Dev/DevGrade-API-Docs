@@ -9,11 +9,11 @@ info:
   version: "1.0.0"
   contact:
     name: DevGrade Support
-    email: support@devgrade.io
+    email: devgradeio@gmail.com
 
 servers:
   - url: https://api.devgrade.io
-    description: Development server for DevGrade
+    description: Production server for DevGrade
 
 tags:
   - name: Auth
